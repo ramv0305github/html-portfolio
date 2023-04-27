@@ -1,0 +1,441 @@
+selenium 4.7.1
+1) Relative xpath = //@tagname["attribute=value"] eg //@input["name=anni"]
+By.xpath("//button[contains(@class,'submit')]")
+By.id("chkboxOne")).click();
+
+2) Obsolute xpath = /html/body/div[1]/div/div[2]/header/div/div[2]/a/img
+3) css =  css=<HTML tag><[attribute=Value of attribute]> eg css=input#Passwd[name^='Pass']
+By.cssSelector("#inputUsername")).sendKeys("rahul");
+4) getText = driver.findElement(By.name("qa")).getText();
+a) window maximize : driver.manage().window().maximize();
+c) cookies delete : driver.manage().deleteAllCookies();
+d) driver.manage().deleteCookieNamed("sessionKey");
+b) closes all the browser windows opened by web driver - driver.quit();
+5) Screenshots
+File src= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(src,new File("C:\\Users\\rahul\\screenshot.png"));
+5) Wait commands :
+Implicit wait = driver.manage().timeouts().implicitlyWait(5,TimeUnits.seconds);
+It makes each command wait for the defined time before resuming test execution.
+By using the Explicit Wait command, the WebDriver is directed to wait until a certain condition occurs before proceeding
+with executing the code.
+WebDriverWait wait = new WebDriverWait(driver,30);
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'COMPOSE')]")));
+Fluent Wait in Selenium marks the maximum amount of time for Selenium WebDriver to wait for a certain condition (web element)
+becomes visible. It also defines how frequently WebDriver will check if the condition appears before throwing
+the “ElementNotVisibleException”.
+Wait wait = new FluentWait(WebDriver reference) .withTimeout(timeout, SECONDS).pollingEvery(timeout, SECONDS).ignoring(Exception.class);
+thread.sleep() - causes WebDriver to wait for a specific time but slows the execution
+
+In Java, abstract classes and interfaces are both used for defining abstractions, but they have some differences in their behavior and usage. Here are some key differences between abstract classes and interfaces:
+Instantiability: Abstract classes cannot be instantiated directly,
+but can only be used as base classes for other classes using the extends keyword.
+On the other hand, interfaces cannot be instantiated at all and only provide a way for classes to declare that they will provide
+certain functionality by implementing the interface.
+
+Method Implementation:
+Abstract classes can have both abstract and non-abstract methods.
+Abstract methods do not have a method body and must be implemented by the concrete subclass that extends the abstract class.
+Non-abstract methods can have an implementation in the abstract class itself.
+Interfaces, on the other hand, can only have abstract methods or constants.
+All methods declared in an interface must be implemented by the implementing class.
+
+Access Modifiers:
+Abstract classes can have public, protected, and package-private methods and fields, but interfaces can only have public methods
+and constants. Interfaces can have default methods and static methods as well.
+
+Inheritance:
+A class can only extend one abstract class, but can implement multiple interfaces. This means that interfaces can be used
+to achieve multiple inheritance of type, while abstract classes cannot.
+
+Usage:
+Abstract classes are often used when creating a hierarchy of related classes, where the base class provides some common behavior,
+but each subclass can have its own behavior as well. Interfaces, on the other hand, are used to define a contract that
+the implementing class must follow to provide certain functionality.In summary, abstract classes and interfaces have different
+purposes and can be used in different situations. Abstract classes are used to define a hierarchy of classes with shared behavior,
+while interfaces are used to define a contract of functionality that can be implemented by multiple unrelated classes.
+Shape circle = new Circle("red", 5.0);
+Shape.printShapeInfo(circle);
+
+6) select command for dropdown lists etc
+Select objSelect =new Select(driver.findElement(By.id("search-box")));
+objSelect.selectByVisibleText("Automation");
+Select.selectByIndex(4);
+objSelect.selectByValue("Automation Testing");
+Select objSelect = new Select(driver.findElement(By.id("Search-box")));
+b) getoptions()
+List <WebElement> elementCount = oSelect.getOptions();
+System.out.println(elementCount.size())
+objSelect.deselectAll();
+objSelect.isMultiple() - select multiple items with the Select command.
+c) Auto suggestive drop down
+List<WebElement> options =driver.findElements(By.cssSelector("li[class='ui-menu-item'] a"));
+for(WebElement option :options){if(option.getText().equalsIgnoreCase("India"))}
+d) checkboxes in selenium
+driver.findElement(By.id("hobbies-checkbox-1")).click();
+
+7)driver.findElement(By.id("confirmbtn")).click();driver.switchTo().alert().accept();
+System.out.println(driver.switchTo().alert().getText());
+driver.switchTo().alert().dismiss();
+
+8) Actions : Actions class is an ability provided by Selenium for handling keyboard and mouse events.
+In Selenium WebDriver, handling these events includes operations such as drag and drop in Selenium,
+clicking on multiple elements with the control key, among others.
+driver.get("https://www.browserstack.com/");
+Actions action = new Actions(driver);
+element = driver.findElement(By.linkText("Get started free"));
+action.moveToElement(element).click();
+b) double click
+driver.get("https://www.browserstack.com/");
+Actions a = new Actions(driver);
+//Double click on element
+WebElement trialaction = driver.findElement(By.xpath("//a[@id='free-trial-link-anchor']"));
+a.doubleClick(trialaction).perform();
+
+9) iframes
+//By finding all the web elements using iframe tag
+List<WebElement> iframeElements = driver.findElements(By.tagName("iframeResult"));
+driver.switchTo().frame(iframeElements(0));
+//Switching back to the main window
+driver.switchTo().defaultContent();
+
+10) window handling in selenium
+// It will return the parent window name as a String
+String parent=driver.getWindowHandle();
+Set<String>s=driver.getWindowHandles();
+// Now iterate using Iterator
+Iterator<String> I1= s.iterator();
+while(I1.hasNext())
+{
+String child_window=I1.next();
+if(!parent.equals(child_window))
+{
+driver.switchTo().window(child_window);
+System.out.println(driver.switchTo().window(child_window).getTitle());
+driver.close();
+}
+}
+//switch to the parent window
+driver.switchTo().window(parent);
+}
+}
+11) Scrolling in webpages
+JavascriptExecutor js = new JavascriptExecutor()driver;
+js.executeScript("window.scrollBy(0,500));
+js.executeScript("window.scrollTop=500;
+
+12) Handling https certifications
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+//SSl certificates
+//Desired capabilities=
+//general chrome profile
+DesiredCapabilities ch=DesiredCapabilities.chrome();
+//ch.acceptInsecureCerts();
+ch.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+ch.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+
+13)setting up proxy
+public static void main(String[] args) {
+// TODO Auto-generated method stub
+ChromeOptions options = new ChromeOptions();
+Proxy proxy = new Proxy();
+proxy.setHttpProxy("ipaddress:4444");
+options.setCapability("proxy", proxy);
+
+14) checking broken links
+int resp = conn.getResponseCode();
+System.out.println(resp);
+
+15) Hard Assertions and soft assertions
+import org.testng.Assert; // hard assert Assert class is Hard assert
+// Test Execution will be aborted if the assert condition is not met.
+// Does not have to invoke any methods to capture the assertions.
+Assert.assertTrue(false); -- Hard assert script will fail if assertion fails.
+Assert.assertEquals(Expected,Actual);//Hard assertions
+SoftAssert :
+Test execution will continue till the end of the test case even if the assert condition is not met
+To view assertions result at the end of the test, the tester has to invoke assertAll();
+
+import org.testng.asserts.SoftAssert; //soft assert
+SoftAssert a =new SoftAssert();
+a,assertTrue(condition) -- soft assertion proceed with test.
+a.assertAll(); - keep at the end of the program and fail here.
+
+16) Browser navigations
+driver.navigate().back() - method enables the web browser to click on the back button in the existing browser window.
+It neither accepts anything nor returns anything.
+In WebDriver, this method refresh/reloads the current web page in the existing browser window.
+It neither accepts anything nor returns anything - driver.navigate().refresh();
+enables the web browser to click on the forward button in the existing browser window - driver.navigate().forward();
+This method loads a new web page in the existing browser window. It accepts String as parameter and returns void.
+- driver.navigate().to("www.google.com");
+
+17) Java Streams
+import java.util.List;
+import org.testng.Assert;
+import java.util.stream.Collectors;
+price = rows.stream().filter(s -> s.getText().contains("Rice"))
+List<WebElement> filteredList= veggies.stream().filter(veggie->veggie.getText().contains("Rice"))
+collect(Collectors.toList());
+Assert.assertEquals(veggies.size(), filteredList.size());
+
+navigating to new window
+driver.switchTo().newWindow(SafariDriver.WindowType.TAB); New selenium feature
+driver.switchTo().window(childWindow);
+
+KeyBoard controls
+We can perform key press of (CTRL+A) with Selenium Webdriver.
+There are multiple ways to do this. We can use the Keys.chord() method to simulate this keyboard action.
+
+TestNG framework
+1)<beforeSuite>,<beforeTest>,<beforeClass>,<beforeMethod> <test1> <afterMethod>,<afterClass>,<afterTest>,<afterSuite>
+2)groups :
+<groups><run><include name="performance"/></run></groups>
+3)@Ignore : will ignore the test
+3b)enabled = false)
+    @Test(enabled = false)
+    public void ooauth()
+    {
+        System.out.println("Oath authentication");
+    }
+4)dependsOnMethods :
+ @Test(dependsOnMethods = "RestAssured")
+       public void APILogin()
+       {
+           System.out.println("APILogin Home");
+       }
+5)syncronisation (timeout=40)
+ @Test(timeOut = 50)
+    public void ooauth()
+    {
+        System.out.println("Oath authentication");
+    }
+6)Parametrisation thru testng.xml
+<parameter name="Browser" value="Edge"></parameter>
+ @Parameters({"Browser"})
+    @Test
+    public void RestAssured(String Browsername)
+    {
+        System.out.println("Rest Assured demo");
+        System.out.println("Browsername is " + Browsername);
+    }
+7) dataProvider annotation
+    @Test(dataProvider="getData")
+    public void MobilesignoutcarLoan(String username,String password)
+    {
+        //Appium
+        System.out.println("Mobile SIGN OUT");
+        System.out.println(username);
+        System.out.println(password);
+
+    }
+     @DataProvider
+        public Object[][] getData() {
+            //1st combination - username password - good credit history= row
+            //2nd - username password  - no credit history
+            // 3rd - fraudulent credit history
+            Object[][] data = new Object[1][2];
+            //1st set
+            data[0][0] = "firstsetusername";
+            data[0][1] = "firstpassword";
+            }
+            }
+9) Listeners
+public class ListenerDemo implements ITestListener
+{
+    @Override
+    public void onTestSuccess(ITestResult result)
+    {
+        System.out.println("Listener test passed");;
+    }
+in testng.xml
+<listeners><listener class-name="com.walmart.sams.veda.TestNG.ListenerDemo"></listener></listeners>
+
+10) Execute tests parallely
+in testng.xml
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd"><suite name="All Test Suite" parallel="tests" thread-count="2">
+POM Model (More like Inheritance)
+standalone page create a obj for landing page
+landingpage lpg = new landingpage();
+lpg.loginapplication("ramv0305@gmail.com","sairam")
+
+In landing page create a constructor and receive the object
+WebDriver driver;
+public landingpage(WebDriver driver);
+{
+this.driver=driver;
+// page factory will be like this
+PageFactory.initElements(driver,this)
+}
+Normal step like below will be replaced with @FindBy
+WebElement username = driver.findElement(By.id("username"));
+@FindBy
+WebElement username = @FindBy(id="username");
+ public void loginapplication(String email,String password)
+ {
+ username.sendkeys(email);
+ password.sendkeys(password);
+ }
+TestNG framework can be combined with POM and pagefactory POM arch sample as follows with testng
+BaseTest - all inits happen here,close browser etc
+(Driver page) Parent class Main java driver file
+Error Validation page for all assertions
+LandingPage(Home page),LoginPage,Products page,Checkout page,Confirmation page
+club related testcases and create testng.xml eg all error validations,functionalities etc
+using dependsOn
+  @Test(dependsOnMethods = "SubmitOrder")
+      public void OrderHistory()
+     {
+       System.out.println("Order history depends on submit order");
+       }
+
+18) POM and page factory : Page Factory is a class provided by Selenium WebDriver to support Page Object Design patterns.
+In Page Factory, testers use @FindBy annotation. The initElements method is used to initialize web elements.
+@FindBy: An annotation used in Page Factory to locate and declare web elements using different locators.
+Below is an example of declaring an element using @FindBy
+Page Object Model	                                Page Factory
+Finding web elements using By	                    Finding web elements using @FindBy
+POM does not provide lazy initialization	        Page Factory does provide lazy initialization
+Page Object Model is a design pattern	            PageFactory is a class that implements the Page Object Model design pattern.
+In POM, one needs to initialize every page object individually	In PageFactory, all page objects are initialized by using the initElements() method
+@FindBy(id="elementId") WebElement element;
+package browserStackPages;
+import static org.testng.Assert.assertEquals;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+19) Getting data from json format and converting it to Hashmap
+Step 2:
+@DataProvider
+	public Object[][] getData() throws IOException
+	{
+		List<HashMap<String,String>> data = getJsonDataToMap(System.getProperty("user.dir")+"//src//test//java//rahulshettyacademy//data//PurchaseOrder.json");
+		return new Object[][]  {{data.get(0)}, {data.get(1) } };
+	}
+Step 1 :
+public List<HashMap<String, String>> getJsonDataToMap(String filePath) throws IOException
+	{
+		//read json to string
+	String jsonContent = 	FileUtils.readFileToString(new File(filePath),
+			StandardCharsets.UTF_8);
+		//String to HashMap- Jackson Databind
+		ObjectMapper mapper = new ObjectMapper();
+	  List<HashMap<String, String>> data = mapper.readValue(jsonContent, new TypeReference<List<HashMap<String, String>>>() {
+      });
+	  return data;
+		//{map, map}
+	}
+20) Taking screenshot and emailing
+public String getScreenshot(String testCaseName,WebDriver driver) throws IOException
+	{
+	    TakesScreenshot ts = (TakesScreenshot)driver;
+		File source = ts.getScreenshotAs(OutputType.FILE);
+		File file = new File(System.getProperty("user.dir") + "//reports//" + testCaseName + ".png");
+		FileUtils.copyFile(source, file);
+		return System.getProperty("user.dir") + "//reports//" + testCaseName + ".png";
+	}
+
+Step 2 use in listeners the above code
+@Override
+	public void onTestFailure(ITestResult result) {
+		// TODO Auto-generated method stub
+		extentTest.get().fail(result.getThrowable());//
+		try {
+			driver = (WebDriver) result.getTestClass().getRealClass().getField("driver")
+					.get(result.getInstance());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String filePath = null;
+		try {
+			filePath = getScreenshot(result.getMethod().getMethodName(),driver);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		extentTest.get().addScreenCaptureFromPath(filePath, result.getMethod().getMethodName());
+		//Screenshot, Attach to report
+		}
+21) Handling concurrent request thread safe
+ThreadLocal<ExtentTest> extentTest = new ThreadLocal<ExtentTest>(); //Thread safe
+extentTest.get().addScreenCaptureFromPath(filePath, result.getMethod().getMethodName());
+public void onTestFailure(ITestResult result) {
+		// TODO Auto-generated method stub
+		extentTest.get().fail(result.getThrowable());// report the error in result screenshot
+		}
+22) Extent reports
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+public class ExtentReporterNG extents BaseTest
+{
+	public static ExtentReports getReportObject()
+	{
+		String path =System.getProperty("user.dir")+"//reports//index.html";
+		ExtentSparkReporter reporter = new ExtentSparkReporter(path);
+		reporter.config().setReportName("Web Automation Results");
+		reporter.config().setDocumentTitle("Test Results");
+
+		ExtentReports extent =new ExtentReports();
+		extent.attachReporter(reporter);
+		extent.setSystemInfo("Tester", "Rahul Shetty");
+		return extent;
+	}
+}
+
+and implementation of extent reports will be using listeners
+public class Listeners extends BaseTest implements ITestListener
+{
+	ExtentTest test;
+	ExtentReports extent = ExtentReporterNG.getReportObject();
+	ThreadLocal<ExtentTest> extentTest = new ThreadLocal<ExtentTest>(); //Thread safe
+	@Override
+	public void onTestStart(ITestResult result)
+	{
+		// TODO Auto-generated method stub
+		test = extent.createTest(result.getMethod().getMethodName());
+		extentTest.set(test);//unique thread id(ErrorValidationTest)->test
+	}
+	@Override
+    	public void onTestSuccess(ITestResult result) {
+    		// TODO Auto-generated method stub
+    		extentTest.get().log(Status.PASS, "Test Passed");
+      	}
+
+      	public void onTestFailure(ITestResult result)
+      	{
+        		// TODO Auto-generated method stub
+        		extentTest.get().fail(result.getThrowable());//
+        }
+23) Rerunning failed testcases using iRetry Analyser listener
+import org.testng.IRetryAnalyzer;
+import org.testng.ITestResult;
+public class Retry implements IRetryAnalyzer {
+	int count = 0;
+	int maxTry = 1;
+    @Override
+	public boolean retry(ITestResult result) {
+		// TODO Auto-generated method stub
+		if(count<maxTry)
+		{
+			count++;
+			return true;
+		}
+		return false;
+	}
+public class ErrorValidationsTest extends BaseTest {
+	@Test(groups= {"ErrorHandling"},retryAnalyzer=Retry.class)
+	public void LoginErrorValidation() throws IOException, InterruptedException
+	{
+	landingPage.loginApplication("anshika@gmail.com", "Iamki000");
+	Assert.assertEquals("Incorrect email or password.", landingPage.getErrorMessage());
+	}
+Running testng from command prompt terminal using maven commands
+% mvn test -PRegression
+
+Junit assertions vs TestNG assertions

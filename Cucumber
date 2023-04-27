@@ -1,0 +1,208 @@
+Cucumber sample feature file Example 1
+@DSVProcess (@tag)
+Feature: Verify Inventory file and record processing for DSV Vendors.
+Background: (is similar to Before test (to be run as prerequisite step))
+Given Login to Homepage
+
+#Passed
+@DSVPollServices
+Scenario: Validate valid file is moved from input source to staging folder and then processed
+Given System is connected to Input Source directory and "validateDsvPolling_502054_{timestamp}.xml" is available
+When Wait for 70 seconds for file processing
+Then Verify file status entries in DB for "IN_PROGRESS"
+
+Scenario Outline: Sample outline
+Given System is connected to Input Source directory and "validateDsvPolling_502054_{timestamp}.xml" is available
+When Wait for 70 seconds for file processing
+Then Verify file status entries in DB for "IN_PROGRESS"
+Examples:
+|toDisposition|fromDisposition|reasonCode|quantity|outputQty|
+|ATS.ex |EIP.ex|SLO|21|21|
+|OIP.ex |WIP.ex|SLO|31|31|
+|TRBL.ex|ATS.ex|SLO|41|-41|
+|RIP.ex |OIP.ex|SLO|51|-51|
+
+Step Definitions
+@RunWith(Cucumber.class)
+public class MyStepDefinitions {
+@Given("^Login to Homepage$")
+public void login_to_homepage() throws Throwable {sout();}
+
+@Given("^System is connected to Input Source directory and \"([^\"]*)\" is available$")
+public void system_is_connected_to_input_source_directory_and_something_is_available(String strArg1) throws Throwable
+{sout();}
+
+@When("^Wait for 70 seconds for file processing$")
+public void wait_for_70_seconds_for_file_processing() throws Throwable{sout();}
+
+@Then("^Verify file status entries in DB for \"([^\"]*)\"$")
+    public void verify_file_status_entries_in_db_for_something(String strArg1) throws Throwable {
+        throw new PendingException();
+    }
+}
+
+TestRunner file
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith( Cucumber.class )
+@CucumberOptions(features = "classpath:features", glue = {"com.walmart.sams.veda.steps"},
+ stepNotifications=true)
+ plugin = {
+        "pretty", "html:target/cucumber-test-report/supply-ingestion-html-report.html",
+        "json:target/cucumber-test-report/supply-ingestion-test-report.json",
+        "junit:target/cucumber-test-report/supply-ingestion-test-report.xml"
+}, tags = "@@DSVProcess ")
+public class RunCucumberTest
+{
+
+}
+for TestNG runner use like this
+import io.cucumber.testng.Cucumber;
+import io.cucumber.testng.CucumberOptions;
+@CucumberOptions(features = "classpath:features", glue = {"com.walmart.sams.veda.steps"},
+ plugin = {
+        "pretty", "html:target/cucumber-test-report/supply-ingestion-html-report.html",
+        "json:target/cucumber-test-report/supply-ingestion-test-report.json",
+        "junit:target/cucumber-test-report/supply-ingestion-test-report.xml"
+}, tags = "@@DSVProcess ")
+public class RunCucumberTestNGRunner extends AbstractTestNGCucumberTests
+{
+
+}
+
+Example 2
+Feature: Application Login
+
+@MobileTest
+Scenario: Home page default login
+Given User is on NetBanking landing page
+When User login into application with "jin" and password "1234"
+Then Home page is populated
+And Cards displayed are "true"
+
+@WebTest @APITest
+Scenario Outline: Home page default login
+Given User is on NetBanking landing page
+When User login in to application with <Username> and password <password>
+Then Home page is populated
+And Cards displayed are "true"
+
+Examples:
+|Username |password|
+|user1    |pass1   |
+|user2    |pass2   |
+|user3    |pass3   |
+|user4    |pass4   |
+
+Step Defns
+import cucumber.api.PendingException;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.And;
+import cucumber.api.junit.Cucumber;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+public class MyStepDefinitions {
+
+    @Given("^User is on NetBanking landing page$")
+    public void user_is_on_netbanking_landing_page() throws Throwable {
+        throw new PendingException();
+    }
+
+    @When("^User login into application with \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void user_login_into_application_with_something_and_password_something(String strArg1, String strArg2) throws Throwable {
+        throw new PendingException();
+    }
+
+    @When("^User login in to application with (.+) and password (.+)$")
+    public void user_login_in_to_application_with_and_password(String username, String password) throws Throwable {
+        throw new PendingException();
+    }
+
+    @Then("^Home page is populated$")
+    public void home_page_is_populated() throws Throwable {
+        throw new PendingException();
+    }
+
+    @And("^Cards displayed are \"([^\"]*)\"$")
+    public void cards_displayed_are_something(String strArg1) throws Throwable {
+        throw new PendingException();
+    }
+
+}
+
+TestRunner options for all types of reports including extent reports
+@RunWith( Cucumber.class )
+@CucumberOptions(features = "classpath:features", glue = {"com.walmart.sams.veda.steps"}
+,dryRun=true (checks only mapping),
+monochrome=true (neat output),
+ stepNotifications=true)
+ plugin = {
+        "pretty", "html:target/cucumber-test-report/supply-ingestion-html-report.html",
+        "json:target/cucumber-test-report/supply-ingestion-test-report.json",
+        "junit:target/cucumber-test-report/supply-ingestion-test-report.xml",
+        "com.aventstack.extentreports.testng.adapter.ExtentTestNgFormatter"
+}, tags = "@WebTest")
+
+Additionally for extent reports include the path like this
+
+ public void onStart(ITestContext context)
+  {
+        extentReports = new ExtentReports();
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("extent.html");
+        extentReports.attachReporter(htmlReporter);
+        or use this line
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("/path/to/report/folder/extent.html");
+  }
+it will create spark.html in the output dir
+if screenshots are needed to be attached with extent reports declare in extent.properties like this
+basefolder.name = test-output/ExtentReport
+extent.reporter.spark.start = true
+extent.reporter.spark.out = test-output/SparkReport/Spark.html
+screenshot.dir = test-output/SparkReport/screenshots
+screenshot.rel.path = ./screenshots/
+
+Rerun failed scenarios using testrunner plugins
+@RunWith( Cucumber.class )
+@CucumberOptions(features = "@target/failedscenarios.txt", glue = {"com.walmart.sams.veda.steps"}
+,dryRun=true (checks only mapping),
+monochrome=true (neat output),
+ stepNotifications=true)
+ plugin = {
+        "pretty", "html:target/cucumber-test-report/supply-ingestion-html-report.html",
+        "json:target/cucumber-test-report/supply-ingestion-test-report.json",
+        "junit:target/cucumber-test-report/supply-ingestion-test-report.xml",
+        "com.aventstack.extentreports.testng.adapter.ExtentTestNgFormatter",
+        "rerun:target/failedscenarios.txt"
+}, tags = "@WebTest")
+
+
+if not to be run then
+tags = "not @WebTest")
+if both tags are present then only need to run then
+tags = "@APITest and @WebTest")
+if to be run with or condition then
+tags = "@APITest or @MobileTest")
+
+Using Hooks @Before and @After annotations to be used if we have multiple tags in the same feature file
+Background to be used when we have same tags in the feature file will be executes as common prerequisite
+Only in step definition
+
+@Before("@MobileTest")
+public void beforevaldiation()
+{
+System.out.println("Before Mobile  hook");
+}
+@After("@WebTest")
+public void AfterWebvaldiation()
+{
+System.out.println("  After Web before hook");
+}
+
+How to dta drive into a test case - Data table
+Parametrize - scenario outline
+Dependency injection using pico container

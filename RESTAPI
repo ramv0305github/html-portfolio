@@ -1,0 +1,592 @@
+Front End Angular -TYPE SCRIPT --> http request json format -->  API (is an interface) -->  and backend Java.(create reservation method)
+Front End Angular -TYPE SCRIPT <-- http response <--  API <-- and backend Java.(create reservation method)
+Endpoint --http url
+
+HTTP (Hypertext Transfer Protocol) methods are used to indicate the action to be performed on a resource located on a server.
+There are several HTTP methods available, each with its own specific purpose.
+Here are the details of the most commonly used HTTP methods:
+GET: The GET method is used to retrieve a resource from the server.
+When a client sends a GET request, the server sends back the requested resource in the response body.
+retrieve (GET,POST,PUT,DELETE are CRUD operations)
+POST: The POST method is used to submit data to the server. When a client sends a POST request,
+the data is sent in the request body, and the server usually responds with a confirmation message.
+create
+PUT: The PUT method is used to update an existing resource on the server. When a client sends a PUT request,
+the entire resource is replaced with the new data sent in the request body.
+update
+DELETE: The DELETE method is used to delete a resource from the server. When a client sends a DELETE request,
+the server deletes the specified resource.
+delete
+PATCH: The PATCH method is used to update a part of an existing resource on the server.
+When a client sends a PATCH request, only the specified part of the resource is updated with the new data sent
+in the request body partial update.
+
+HEAD: The HEAD method is similar to the GET method, but it only requests the headers of the resource and not the full content.
+This is useful for retrieving metadata about a resource without actually downloading it.
+partial retrieve
+OPTIONS: The OPTIONS method is used to retrieve the communication options available for a resource.
+When a client sends an OPTIONS request, the server responds with a list of available methods, headers,
+and other communication options.These HTTP methods are used in combination with the HTTP protocol to enable
+communication between clients and servers on the web full retrieve.
+
+Path and query parameters are mostly associated with GET request
+2) path parameters and query parameters are both used to pass information to the server.
+Path parameters are used to identify a specific resource in the URL.
+They are part of the URL path and are identified by a colon followed by a parameter name.
+For example, in the URL "/users/:userId", ":userId" is a path parameter that identifies a specific user resource.
+Path parameters are used to retrieve, create, update, or delete a specific resource. They are usually required parameters.
+
+Query parameters, on the other hand, are used to filter or sort a collection of resources.
+They are part of the URL query string and are identified by a question mark followed by a parameter name and value pairs.
+For example, in the URL "/users?age=30&gender=male", "age" and "gender" are query parameters that filter the user collection
+to return only male users who are 30 years old. Query parameters are optional
+and can be used to modify the behavior of a resource request.
+path parameters are used to identify a specific resource, while query parameters are used to filter or sort a collection of resources.
+
+Headers/Cookies:Headers represent the meta-data associated with the API request and response.
+In layman terms, we were sending Additional details to API to process our request.Example : Authorization details
+
+REST API
+1) Different status codes
+200 OK: The request has succeeded, and the response body contains the requested data.
+201 Created: The request has succeeded and a new resource has been created. The response body typically contains a representation of the newly created resource.
+204 No Content: The request has succeeded, but there is no representation to return (e.g., for a DELETE request).
+400 Bad Request: The request was invalid or could not be understood by the server.
+401 Unauthorized: The client must authenticate itself to get the requested response.
+403 Forbidden: The client does not have access rights to the content.
+404 Not Found: The requested resource could not be found.
+405 Method Not Allowed: The requested method is not supported for the specified resource.
+409 Conflict: The request conflicts with the current state of the server.
+500 Internal Server Error: The server encountered an unexpected condition that prevented it from fulfilling the request.
+501 : The server does not support the functionality required to fulfill the request.due to a lack of support or configuration.
+It is up to the client to modify the request or to try again with a different server or configuration.
+
+return new String(Files.readAllBytes(Paths.get(path))) - To get static payload from a file to the script.
+
+Basic authentication,OAuTH and cookies are auth process
+Creating sessions
+SessionFilter session = new SessionFilter();
+given().body.filter(session).when.post();
+Add attachment with multipart method.
+
+How to pass cookie authorisation in http headers for APIs using rest assured
+String sessionId = given().contentType("application/json").body("{ \"username\": \"myusername\", \"password\": \"mypassword\" }").
+when().post("/login").then().extract().path("sessionId");
+RequestSpecification requestSpec = given().cookie("sessionId", sessionId);
+
+API Key auth contains key and value which can be added to Header or query parameters
+
+Bearer token authorization is a type of authentication scheme that is commonly used in API requests. It involves
+passing a token, known as a bearer token, in the HTTP Authorization header of a request.
+A bearer token is a security token that is issued by an authentication server, and it is used to authenticate a user or
+an application. When a user or an application makes a request to an API, the bearer token is included in the
+Authorization header of the HTTP request.
+format is
+Authorization: Bearer qaclick123
+
+Rest Assured code as follows
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String token = "<token>";
+given().header("Authorization", "Bearer " + token).when().get(url).then().statusCode(200);
+
+JWT Bearer: JWT (JSON Web Token) Bearer is a type of authorization that involves passing a JWT in the Authorization
+header of a request to authenticate and authorize access to an API.JWTs are compact, self-contained tokens that contain
+information about a user or a client. They are commonly used in authentication and authorization protocols because
+they are secure, portable, and easy to use. A JWT consists of three parts: a header, a payload, and a signature.
+The Authorization header for a JWT Bearer token looks like this:
+The <jwt> value is the JWT that was issued by the authentication server.
+It is a long string of characters that contains the user's or the client's identity and any additional information
+that is required for authorization.
+Bearer eyJhbGciOiJIUzI1NiJ9.e30.DE4H1V_AB33fDDBVZgVJLYiuphLg0NmoeBxQCJAmhlo
+Rest Assured code as follows
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String jwt = "<jwt>";
+given().header("Authorization", "Bearer " + jwt).when().get(url).then().statusCode(200);
+
+Basic auth
+Basic Authentication is a simple authentication scheme that involves sending a username and a password in
+the HTTP Authorization header of a request to authenticate and authorize access to an API.
+In Basic Authentication, the username and password are combined into a string in the format username:password,
+and then encoded in Base64. The resulting string is then passed in the Authorization header of the request using the
+"Basic" authentication scheme. The Authorization header for Basic Authentication looks like this:
+Authorization: Basic <base64-encoded-username-and-password>
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String username = "<username>";
+String password = "<password>";
+given().header("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes()))
+.when().get(url).then().statusCode(200);
+Note that the Base64.getEncoder() method is used to encode the username:password string in Base64,
+which is then concatenated with the string "Basic " to create the Authorization header.
+
+Digest Authentication is a more secure authentication scheme than Basic Authentication that involves sending
+a hash of the username, password, and other request parameters in the HTTP Authorization header of a request to
+authenticate and authorize access to an API.In Digest Authentication, the client sends a request
+to the server with an empty Authorization header. The server responds with a 401 Unauthorized status code and a WWW-Authenticate
+header that contains a nonce value and other parameters that the client must use to generate a hash of the username, password, and other request parameters.
+The client then sends another request to the server with the Authorization header that contains the hash.
+
+The Authorization header for Digest Authentication looks like this:
+Authorization: Digest username="<username>", realm="<realm>", nonce="<nonce>", uri="<uri>", response="<response>"
+In Rest Assured, you can include Digest Authentication in your API request by setting the Authorization header to
+Digest username="<username>", realm="<realm>", nonce="<nonce>", uri="<uri>", response="<response>" using the
+header() method. Here is an example:
+
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String username = "<username>";
+String password = "<password>";
+// First request without Authorization header to obtain the nonce
+Response response = given().when().get(url);
+// Extract the nonce from the response
+String nonce = response.getHeader("WWW-Authenticate").split(",")[1].split("=")[1].replaceAll("\"", "");
+// Generate the hash of the credentials and the other request parameters
+String realm = "<realm>";
+String uri = "<uri>";
+String hash = DigestUtils.md5Hex(username + ":" + realm + ":" + password);
+String response = DigestUtils.md5Hex(hash + ":" + nonce + ":" + "00000001" + ":" + "xyz" + ":" + "auth" + ":" + DigestUtils.md5Hex("GET:" + uri));
+
+// Include the Digest Authentication credentials in the Authorization header of the request
+given().header("Authorization", "Digest username=\"" + username + "\", realm=\"" + realm + "\", nonce=\"" + nonce + "\",
+uri=\"" + uri + "\", response=\"" + response + "\"").when().get(url).then().statusCode(200);
+
+In this example, we're using Rest Assured to send a GET request to the some_endpoint endpoint of the api.example.com
+server with Digest Authentication. We first send a request without the Authorization header to obtain the nonce value from
+the server's WWW-Authenticate header. We then extract the nonce value from the header and generate a hash of the username,
+password, and other request parameters. Finally, we include the Digest Authentication credentials in the Authorization
+header of the request using the header() method of Rest Assured. We then assert that the response status code is 200
+using the statusCode() method.Note that the example code uses the Apache Commons Codec library to generate
+the MD5 hash of the credentials and the other request parameters.You will need to add this library to your project's
+build file and import the necessary classes at the top of your file.
+
+OAuth 1.0
+OAuth (Open Authorization) is a standard protocol used to authorize third-party applications to access resources on behalf
+of a user without sharing their login credentials. There are several OAuth authorization (Grant types) that define how
+authorization is granted and what kind of access is provided. The most commonly used OAuth authorization types are:
+OAuth 1.0 works by using a token-based authentication scheme, where the user authorizes a third-party application
+to access their data on a server and receives a temporary token to use for subsequent requests.
+In Rest Assured, you can use OAuth 1.0 to authenticate and authorize API requests by including the required
+parameters in the HTTP Authorization header.
+Here's an example of how to use OAuth 1.0 in Rest Assured:
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String consumerKey = "<consumer_key>";
+String consumerSecret = "<consumer_secret>";
+String accessToken = "<access_token>";
+String accessTokenSecret = "<access_token_secret>";
+
+// Define the OAuth 1.0 parameters
+OAuth1Authenticator oauth = OAuth1Authenticator.builder().setAccessToken(accessToken).setAccessTokenSecret(accessTokenSecret)
+.setConsumerKey(consumerKey).setConsumerSecret(consumerSecret).setSignatureMethod(SignatureMethod.HMAC_SHA1).build();
+
+// Include the OAuth 1.0 Authorization header in the request
+given().auth().oauth(oauth).when().get(url).then().statusCode(200);
+
+sample header request looks like this
+OAuth oauth_consumer_key="QAClick123",
+oauth_token="vidyalaya",
+oauth_signature_method="HMAC-SHA1",
+oauth_timestamp="1682335252",
+oauth_nonce="KheswEKOzdf",
+oauth_version="1.0",
+oauth_callback="www.google.com",
+oauth_verifier="pass",oauth_signature="dOY7ehziEPvAbTZOZ7SxVhDxfG4%3D"
+
+Authorization Code: This is the most commonly used OAuth authorization type.It is used to grant authorization to a third-party
+application to access resources on behalf of a user.The user is first redirected to the authorization server, where they
+authenticate and authorize the application to access their resources. The authorization server then generates an authorization
+code that is exchanged for an access token by the client application.
+
+//OAuth 2.0
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String accessToken = "<access_token>";
+// Include the OAuth 2.0 Authorization header in the request
+given().header("Authorization", "Bearer " + accessToken).when().get(url).then().statusCode(200);
+
+Refresh Token: This OAuth authorization type is used to obtain a new access token without requiring the user to re-authenticate.
+When an access token expires, the client application can use the refresh token to obtain a new access
+token from the authorization server.These OAuth authorization types provide different levels of security and access control.
+It is essential to choose the appropriate authorization type based on the application's requirements and security needs.
+// Obtain a new access token using the Refresh Token
+given().header("Authorization", "Bearer " + refreshToken).param("grant_type", "refresh_token")
+.when().post("https://api.example.com/oauth/token").then().statusCode(200).extract().path("access_token");
+
+// Include the new access token in subsequent API requests
+given().header("Authorization", "Bearer " + newAccessToken).when().get(url).then().statusCode(200);
+
+Implicit:This OAuth authorization type is used in client-side applications, such as web or mobile apps.
+In this type, the access token is returned to the client application directly, without the use of an authorization code.
+This type of authorization does not require a client secret, but it is less secure than the Authorization Code type.
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String accessToken = "<access_token>";
+
+// Include the OAuth 2.0 Authorization header with the access token
+given().header("Authorization", "Bearer " + accessToken).when().get(url).then().statusCode(200);
+
+
+Resource Owner Password Credentials: This OAuth authorization type allows the client application to request the user's
+username and password directly from the user, and use them to obtain an access token from the authorization server.
+This type of authorization should only be used when other authorization types are not feasible,
+and the client application is trusted.
+
+Client Credentials: This OAuth authorization type is used when the client application needs to access its own resources,
+rather than resources belonging to a user. The client application requests an access token using its own credentials,
+and uses the access token to access its resources on the server.
+In the Client Credentials flow, the client application sends its credentials (client ID and client secret) to the
+authorization server in exchange for an access token. The access token is then used to authenticate subsequent API requests.
+In Rest Assured, you can use the Client Credentials flow to authenticate API requests by including the access token
+in the HTTP Authorization header. Here's an example of how to use Client Credentials flow in Rest Assured:
+
+import static io.restassured.RestAssured.*;
+String url = "https://api.example.com/some_endpoint";
+String clientId = "<client_id>";
+String clientSecret = "<client_secret>";
+
+// Obtain an access token using the Client Credentials flow
+String accessToken = given().auth().preemptive().basic(clientId, clientSecret).formParam("grant_type", "client_credentials")
+.when().post("https://api.example.com/oauth/token").then().extract().path("access_token");
+
+// Include the access token in subsequent API requests
+given().header("Authorization", "Bearer " + accessToken).when().get(url).then().statusCode(200);
+
+Pojo classes implemented through jackson,Gson etc
+// Import required libraries
+import com.google.gson.Gson;
+import io.restassured.RestAssured;
+
+// Create a POJO class representing the JSON payload
+public class User {
+    public String name;
+    public String email;
+}
+
+// Serialize the POJO class into a JSON payload using the Gson library
+User user = new User();
+user.name = "John";
+user.email = "john@example.com";
+String jsonpayload = new Gson().toJson(user);
+
+// Specify the request body with the serialized JSON payload using the given() method
+RestAssured.given().contentType("application/json").body(jsonpayload).post("www.api.com/users").then().statusCode(200);
+
+// Deserialize the JSON response into a POJO class using the as() method
+Deserialization of JSON payload in API testing is the process of converting the JSON response from an API into a
+Java object that can be used in your test code. This process involves mapping the JSON key-value pairs to corresponding
+fields in a Java object.Rest Assured provides built-in support for deserialization of JSON responses using the GSON or
+Jackson libraries. Here's an example of how to deserialize a JSON response using Rest Assured
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.testng.annotations.Test;
+import static io.restassured.RestAssured.*;
+
+public class DeserializeJsonTest {
+    @Test
+    public void deserializeJson() {
+        // Send an HTTP GET request
+        Response response = get("https://api.example.com/users");
+        // Deserialize the JSON response to a Java object using GSON
+        User[] users = response.as(User[].class);
+
+        // Iterate over the array of users and print the name and email
+        for (User user : users) {
+            System.out.println("Name: " + user.getName());
+            System.out.println("Email: " + user.getEmail());
+        }
+    }
+}
+
+Deserialisation eg
+User responseUser = RestAssured.get("/users/1").then().extract().as(User.class);
+
+Spec builders
+Spec builders in REST Assured are used to define a request specification that can be reused across multiple API requests.
+A request specification is a set of predefined conditions that you can set up for a request,
+such as the request method, headers, parameters, and body.
+
+Spec builders in REST Assured provide a fluent API that allows you to specify the request specification in a readable and concise way.
+You can define a request specification using the given(), when(), and then() methods in REST Assured.
+
+Here is an example of how to use spec builders in REST Assured:
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.given;
+
+// Define a request specification using a spec builder
+RequestSpecification requestSpec = new RequestSpecBuilder().setBaseUri("https://api.example.com")
+.addHeader("Authorization", "Bearer token").addQueryParam("param1", "value1")
+.setContentType("application/json").build();
+
+// Use the request specification in an API request
+given().spec(requestSpec).body("{\"name\":\"John\", \"age\":30}").post("/users").then().statusCode(200);
+
+// Reuse the request specification in another API request
+given().spec(requestSpec).get("/users/1").then().statusCode(200);
+
+GraphQL can be used in REST Assured when the server supports GraphQL queries.
+GraphQL is a query language for APIs that allows clients to request only the data they need, and nothing more.
+This can help reduce network overhead and improve performance compared to RESTful APIs that may return large amounts of
+data that the client doesn't actually need.RESTful APIs, it also provides support for GraphQL APIs through the graphql-java
+library.Additionally, Rest Assured provides built-in support for assertions, which can be used to verify the correctness
+of the GraphQL response.
+Note that in order to use Rest Assured with GraphQL, you'll need to include the graphql-java library on your classpath,
+which provides the necessary support for parsing and executing GraphQL queries
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.testng.annotations.Test;
+import static io.restassured.RestAssured.given;
+
+public class GraphQLTest {
+    @Test
+    public void testGraphQL() {
+        RestAssured.baseURI = "https://api.example.com/graphql";
+        String query = "{ user(id: 123) { name email } }";
+        Response response = given().header("Content-Type", "application/json").body("{\"query\": \"" + query + "\"}")
+                .post();
+        System.out.println(response.getBody().asString());
+    }
+}
+In GraphQL, a mutation is an operation that modifies data on the server.Mutations are similar to queries,
+but they are used to make changes to the data instead of just retrieving it.
+Mutations can also be used to trigger side effects on the server, such as sending emails, updating caches,
+or triggering other API calls.
+mutation {
+  createUser(input: {name: "Alice", email: "alice@example.com"}) {
+    id
+    name
+    email
+  }
+}
+This mutation creates a new user on the server, with a name of "Alice" and an email of "alice@example.com".
+The mutation returns the ID, name, and email of the newly created user which can be used by the client to verify that
+the operation was successful.
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import static io.restassured.RestAssured.given;
+
+public class MutationExample {
+
+    public static void main(String[] args) {
+
+        // Set the base URL for the GraphQL API
+        RestAssured.baseURI = "https://example.com/graphql";
+        // Define the GraphQL mutation
+        String mutation = "mutation { " +
+                "createUser(input: {name: \"Alice\", email: \"alice@example.com\"}) { " +
+                "id " + "name " + "email " + "} " + "}";
+        // Send the GraphQL mutation and get the response
+        Response response = given().contentType("application/json").body("{\"query\": \"" + mutation + "\"}").post();
+
+        // Print the response body
+        System.out.println(response.getBody().asString());
+    }
+}
+
+Another eg
+given().baseUri("https://api.example.com/graphql").
+header("Authorization", "Bearer token")
+.contentType("application/json").body("{ \"query\": \"query { user(id: 1) { name, email } }\" }")
+.when().post().then().statusCode(200).contentType("application/json").body("data.user.name", equalTo("John"))
+.body("data.user.email", equalTo("john@example.com"));
+
+Cucumber implementation in rest assured
+1) Add Cucumber and cucumber-junit and REST Assured dependencies to your project.
+2) Create a feature file that contains the test scenarios in Gherkin syntax.
+Here is an example of a feature file:
+Feature: User API
+Scenario: Create a user
+Given the user endpoint
+And the user payload:
+|name|John|
+|age|30|
+When I send a POST request
+Then the response status code should be 201
+And the response body should contain the user details
+Scenario: Retrieve a user
+Given the user endpoint with id 1
+When I send a GET request
+Then the response status code should be 200
+And the response body should contain the user details
+3)Create step definitions for the test scenarios in the feature file.
+The step definitions define the actual implementation of the test scenarios.
+Here is an example of step definitions:
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.java.en.Then;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+public class UserStepDefinitions {
+    private RequestSpecification request;
+    private Response response;
+
+@Given("the user endpoint")
+    public void the_user_endpoint()
+     {
+        request = given().baseUri("https://api.example.com").basePath("/users").header("Authorization", "Bearer token")
+            .contentType("application/json");
+    }
+
+@Given("the user endpoint with id {int}")
+    public void the_user_endpoint_with_id(int userId)
+    {
+        request = given().baseUri("https://api.example.com").basePath("/users/" + userId).header("Authorization", "Bearer token")
+            .contentType("application/json");
+    }
+
+@Given("the user payload:")
+public void the_user_payload(DataTable dataTable)
+{
+        Map<String, String> user = dataTable.asMap(String.class, String.class);
+        request.body(user);
+}
+
+@When("I send a POST request")
+public void i_send_a_post_request()
+{
+        response = request.post();
+ }
+
+@When("I send a GET request")
+public void i_send_a_get_request() { response = request.get(); }
+
+@Then("the response status code should be").log().all();
+
+Enum classes in Java are used to define a fixed set of constants or values that are used throughout the code.
+In REST Assured, enum classes are used to define HTTP methods, status codes, headers, and content types.
+Here are some examples of enum classes in REST Assured:
+
+HTTP methods
+public enum HttpMethod { GET, POST, PUT, DELETE, HEAD, OPTIONS, PATCH, TRACE }
+given().baseUri("https://api.example.com").basePath("/users").header("Authorization", "Bearer token")
+.contentType("application/json")
+.when().request(HttpMethod.POST, "/users").then().statusCode(201);
+
+mvn clean test - command to run a rest assured framework thru maven command
+This will compile your code, run your tests, and generate a test report in the target/surefire-reports directory.
+
+In REST Assured, you can use the graphql method to send GraphQL queries to a server and validate the response.
+The graphql method takes a String parameter representing the GraphQL query and sends it to the server.
+
+
+
+Excel integration with rest assured
+Excel integration with REST Assured tests can be achieved using libraries such as Apache POI, JXL, or OpenCSV.
+These libraries can be used to read test data from an Excel file and pass it as input parameters to REST Assured tests.
+Here is an example of how to integrate an Excel file with REST Assured tests using the Apache POI library:
+
+Create an Excel file with test data. The first row of the file should contain column headers, and each subsequent row should contain a set of test data.
+Add the Apache POI dependency to your project.
+You can do this by adding the following dependency to your Maven pom.xml file.
+
+@Test
+public void testCreateUser() throws IOException {
+    FileInputStream file = new FileInputStream(new File("testdata.xlsx"));
+    XSSFWorkbook workbook = new XSSFWorkbook(file);
+    XSSFSheet sheet = workbook.getSheetAt(0);
+    for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+        XSSFRow row = sheet.getRow(i);
+        String name = row.getCell(0).getStringCellValue();
+        String email = row.getCell(1).getStringCellValue();
+        String password = row.getCell(2).getStringCellValue();
+        given().baseUri("https://api.example.com").contentType("application/json")
+            .body("{ \"name\": \"" + name + "\", \"email\": \"" + email + "\", \"password\": \"" + password + "\" }")
+        .when().post("/users").then().statusCode(201);
+    }
+    file.close();
+    workbook.close();
+}
+
+converting hashmap to json
+To convert a HashMap to JSON format, you can use a JSON library like Jackson or Gson.
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+public class HashMapToJsonExample {
+    public static void main(String[] args) {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "John");
+        map.put("age", "30");
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String json = objectMapper.writeValueAsString(map);
+            System.out.println(json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+Karate framework :
+Karate is an open-source test automation framework that uses a Behavior Driven Development (BDD) approach to test web services,
+REST APIs, and microservices. It is built on top of the Cucumber-JVM testing framework and provides a simple,
+expressive syntax for writing test cases in Gherkin format.
+The following dependencies are used in karate
+<groupId>com.intuit.karate</groupId> <artifactId>karate-core</artifactId>
+<groupId>com.intuit.karate</groupId> <artifactId>karate-junit4</artifactId>
+
+Feature file in karate
+Feature: API Testing with Karate
+Scenario: Verify a successful GET request
+Given url 'https://jsonplaceholder.typicode.com/posts'
+When method GET
+Then status 200
+And match response == [{"userId": 1, "id": 1, "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit", "body": "quia et suscipit\nsuscipit...}]
+
+Scenario: Verify a successful POST request
+Given url 'https://jsonplaceholder.typicode.com/posts'
+And request { "userId": 1, "id": 101, "title": "test title", "body": "test body" }
+When method POST
+Then status 201
+And match response == { "userId": 1, "id": 101, "title": "test title", "body": "test body" }
+
+Step defn
+function() {
+  var config = {
+    baseUrl: 'https://jsonplaceholder.typicode.com'
+  };
+karate.configure('connectTimeout', 5000);
+karate.configure('readTimeout', 5000);
+var createPost = function(post) {
+var endpoint = '/posts';
+return karate.callSingle('create-post.feature', { post: post }, config).response;
+  };
+
+var deletePost = function(id) {
+var endpoint = '/posts/' + id;
+karate.call('delete-post.feature', endpoint, config);
+  };
+  return {
+createPost: createPost,
+deletePost: deletePost
+  };
+}
+Test Runner file
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class TestRunner {
+@Test
+void testParallel() {
+Results results = Runner.path("classpath:tests").parallel(5);
+assertEquals(0, results.getFailCount(), results.getErrorMessages());
+   }
+
+}
+
+
+
+
+
+
+
+
+

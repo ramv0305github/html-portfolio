@@ -1,0 +1,60 @@
+Git integration steps
+git init
+git status
+git add
+git commit -m "first commit"
+git remote add origin https://github.com/your-username/your-repo.git
+git push origin master
+
+to create a new branch
+git branch <new_branch_name>
+git branch feature-branch //eg branch
+git checkout feature-branch
+
+to pull the code
+git pull origin master
+git checkout develop
+Merging
+git checkout master
+git merge develop
+git add *
+git commit -m "final commit"
+
+to undo local changes
+git fetch origin
+git reset --hard HEAD^
+git reset HEAD^
+
+CI/CD Jenkins
+24)Jenkins
+1) To start from cmd
+java -jar jenkins.war httpPort:9090
+
+Running jenkins in headless mode
+public class BaseTest
+{
+ Properties prop = new Properties();
+ FileInputStream fis = new FileInputStream(System.getProperty("user.dir")
+				+ "//src//main//java//rahulshettyacademy//resources//GlobalData.properties");
+ prop.load(fis);
+ String browserName = System.getProperty("browser")!=null ? System.getProperty("browser") :prop.getProperty("browser");
+ prop.getProperty("browser");
+ if (browserName.contains("chrome")) {
+ ChromeOptions options = new ChromeOptions();
+ WebDriverManager.chromedriver().setup();
+ if(browserName.contains("headless")){
+ options.addArguments("headless");
+}
+}
+}
+25) Automatic triggering of jenkins job
+1)Jenkins -> configure -> Build Triggers -> Build Peridocally schedule ****(mins,hrs,dayofmonth,month) (1552412)
+(*6***)
+MINUTE HOUR DAY-OF-MONTH MONTH DAY-OF-WEEK
+To run the job every day at 1:00 AM, enter 0 1 * * *.
+To run the job every Monday at 2:30 PM, enter 30 14 * * 1.
+To run the job every hour on the half hour, enter 30 * * * *
+
+
+
+
